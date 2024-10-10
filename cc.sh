@@ -1,11 +1,20 @@
 #!/bin/bash
 
+ascii_art_start() {
+    echo "────────────────"
+    echo " 🆂 🅲 🅷 🅾 🅾 🅻 21"
+    echo "  c-compiler"
+    echo "     v.1.1"
+    echo "────────────────"
+    echo ""
+}
+
 log_info() {
-    echo "INFO: $1"
+    echo -e "\033[1;32mINFO:\033[0m $1"
 }
 
 log_error() {
-    echo "ERROR: $1" >&2
+    echo -e "\033[1;31mERROR:\033[0m $1" >&2
 }
 
 check_dependencies() {
@@ -18,7 +27,6 @@ format_code() {
         log_info "Форматирование..."
         clang-format -n "$1" || { log_error "clang-format обнаружил проблемы."; exit 1; }
         clang-format -i "$1"
-        log_info "Готово"
     else
         log_info "Форматирование пропущено из-за флага --no-format"
     fi
@@ -27,16 +35,15 @@ format_code() {
 compile_code() {
     log_info "Компиляция..."
     if [ "$SHOULD_MEM_CHECK" = true ]; then
-        gcc -g -O0 -Wall -Werror -Wextra -fsanitize=address "$1" -o "build/$2" || { log_error "Ошибка компиляции."; exit 1; }
+        gcc -g -O0 -Wall -Werror -Wextra -fsanitize=address -fsanitize=leak -fsanitize=undefined -fsanitize=unreachable "$1" -o "build/$2" || { log_error "Ошибка компиляции."; exit 1; }
     else
         gcc -g -O0 -Wall -Werror -Wextra "$1" -o "build/$2" || { log_error "Ошибка компиляции."; exit 1; }
     fi
-    log_info "Готово"
 }
 
 run_program() {
     if [ "$SHOULD_START" = true ]; then
-        log_info "Запуск $1"
+        log_info "Запуск $1 ..."
         echo "(для отмены запуска нажмите Ctrl + C)"
         "./build/$1"
     else
@@ -44,12 +51,31 @@ run_program() {
     fi
 }
 
+show_help() {
+    echo "Usage: $0 [options] <file.c|*>"
+    echo
+    echo "Options:"
+    echo "  --no-start       Не запускать программу после компиляции (не применяется при использовании *)."
+    echo "  --no-format      Не форматировать код перед компиляцией."
+    echo "  --no-mem-check   Не использовать проверку памяти при компиляции."
+    echo "  -h, --help       Показать это сообщение и выйти."
+    echo
+    echo "Пример: $0 --no-format my_program.c"
+    echo "Пример: $0 *"
+}
+
 main() {
-    log_info "Старт сборки"
+    ascii_art_start
 
     SHOULD_START=true
     SHOULD_FORMAT=true
     SHOULD_MEM_CHECK=true
+
+    if [ $# -eq 0 ]; then
+        log_error "Нет введенных опций или файла."
+        show_help
+        exit 1
+    fi
 
     while [[ $# -gt 0 ]]; do
         case $1 in
@@ -65,36 +91,56 @@ main() {
                 SHOULD_MEM_CHECK=false
                 shift
                 ;;
+            -h|--help)
+                show_help
+                exit 0
+                ;;
             *)
                 TARGET_FILE=$1
+                SHOULD_START=false
                 shift
                 ;;
         esac
     done
+
+    echo $TARGET_FILE
 
     if [ -z "$TARGET_FILE" ]; then
         log_error "Файл не указан"
         exit 1
     fi
 
-    TARGET_FILE_WITHOUT_EXTENSION=$(basename "$TARGET_FILE" .c)
-
-    if [[ ! "$TARGET_FILE" =~ \.c$ ]]; then
-        log_error "Файл $TARGET_FILE не является C-файлом."
-        exit 1
+    if [ "$TARGET_FILE" = "*" ]; then
+        FILES=$(*.c)
+        if [ ${#FILES[@]} -eq 0 ]; then
+            log_error "Нет C-файлов в текущей директории."
+            exit 1
+        fi
+    else
+        FILES=("$TARGET_FILE")
     fi
 
     check_dependencies
-
-    format_code "$TARGET_FILE"
 
     if ! [ -d ./build ]; then
         mkdir build
     fi
 
-    compile_code "$TARGET_FILE" "$TARGET_FILE_WITHOUT_EXTENSION"
+    echo $FILES
 
-    run_program "$TARGET_FILE_WITHOUT_EXTENSION"
+    for FILE in "${FILES[@]}"; do
+        if [[ ! "$FILE" =~ \.c$ ]]; then
+            log_error "Файл $FILE не является C-файлом."
+            continue
+        fi
+
+        TARGET_FILE_WITHOUT_EXTENSION=$(basename "$FILE" .c)
+
+        log_info "Старт сборки $FILE ..."
+        format_code "$FILE"
+        compile_code "$FILE" "$TARGET_FILE_WITHOUT_EXTENSION"
+        run_program "$TARGET_FILE_WITHOUT_EXTENSION"
+    done
 }
 
 main "$@"
