@@ -7,47 +7,30 @@
 #include "../src/tests_lib/tests_fixture.h"
 #include "../src/tests_lib/tests_logger.h"
 
-void test_scan_input_characters() {
-    int size = 10;
-    char *input = (char *)calloc(size, sizeof(char));
-    assert(input != NULL);
+void test_input_str() {
+    char *input = NULL;
 
-    read_file_in_stdin("tests/test_data/input_lib/test_scan_input_characters.txt");
+    read_file_in_stdin("tests/test_data/input_lib/test_input_str.txt");
 
-    input = scan_input_characters(input, &size);
-
-    assert(input != NULL);
+    input = input_str(input);
     assert(strcmp(input, "hello") == 0);
 
     free(input);
 }
 
-void test_input_string() {
-    int size = 10;
-    char *input = input_sting(size);
-    assert(input != NULL);
-
-    read_file_in_stdin("tests/test_data/input_lib/test_input_string.txt");
-
-    assert(strcmp(input, "hello") == 0);
-
-    free(input);
-}
-
-void test_input_single_digit() {
+void test_input_digit() {
     int number;
 
-    read_file_in_stdin("tests/test_data/input_lib/test_input_single_digit.txt");
+    read_file_in_stdin("tests/test_data/input_lib/test_input_digit.txt");
 
-    int result = input_single_digit(&number);
+    int result = input_digit(&number);
     assert(result == 1);
     assert(number == 42);
 }
 
 int main() {
-    run_test((Test)test_scan_input_characters, 1, 3, "test_scan_input_characters");
-    run_test((Test)test_input_string, 2, 3, "test_input_string");
-    run_test((Test)test_input_single_digit, 3, 3, "test_input_single_digit");
-    printf("All %d/%d tests passed!\n", 3, 3);
+    run_test((Test)test_input_str, 1, 2, "test_input_str");
+    run_test((Test)test_input_digit, 2, 2, "test_input_digit");
+    printf("All %d/%d tests passed!\n", 2, 2);
     return 0;
 }

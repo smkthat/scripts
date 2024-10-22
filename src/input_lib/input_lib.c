@@ -2,62 +2,54 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-char *scan_input_characters(char *array, const int *size) {
-    if (array != NULL) {
-        int used_size = 0;
-        int allocated_size = *size;
-        char *cur = array;
+char *input_str(char *str) {
+    size_t current_size = INPUT_DEFAULT_SIZE;
 
-        while (scanf("%c", cur) == 1 && *cur != '\n' && *cur != EOF) {
-            used_size++;
-            cur++;
+    char *buffer = (char *)malloc(current_size * sizeof(char));
 
-            if (allocated_size - 1 < used_size) {
-                allocated_size *= 2;
-
-                char *new_array = (char *)realloc(array, allocated_size * sizeof(char));
-
-                if (new_array == NULL) {
-                    break;
-                }
-
-                array = new_array;
-                cur = new_array + used_size;
+    if (buffer != NULL) {
+        size_t length = 0;
+        while (fgets(buffer + length, current_size - length, stdin) != NULL) {
+            length += strcspn(buffer + length, "\n");
+            if (buffer[length] == '\n') {
+                buffer[length] = '\0';
+                break;
             }
+
+            current_size = (size_t)(current_size * 1.5);
+            char *new_buffer = realloc(buffer, current_size);
+            if (new_buffer == NULL) {
+                free(buffer);
+                return NULL;
+            }
+
+            buffer = new_buffer;
         }
 
-        *cur = '\0';
-    } else {
-        fprintf(stderr, "Error: Initial array is NULL.\n");
+        free(str);
     }
 
-    return array;
+    return buffer;
 }
 
-char *input_sting(int default_size) {
-    char *input_array = NULL;
+int input_digit(int *digit) {
+    int is_valid = 1;
+    char input[INPUT_DEFAULT_SIZE];
+    char *end;
 
-    if (default_size > 1) {
-        default_size++;
+    if (fgets(input, sizeof(input), stdin) == NULL) {
+        is_valid = 0;
+    }
 
-        input_array = (char *)calloc(default_size, sizeof(char));
+    if (is_valid) {
+        input[strcspn(input, "\n")] = '\0';
+        *digit = strtol(input, &end, 10);
 
-        if (input_array != NULL) {
-            input_array = scan_input_characters(input_array, &default_size);
+        if (*end != '\0') {
+            is_valid = 0;
         }
-    }
-
-    return input_array;
-}
-
-int input_single_digit(int *digit) {
-    int end;
-
-    int is_valid = (scanf("%d%c", digit, (char *)&end) == 2 && end == '\n') ? 1 : 0;
-
-    if (!is_valid) {
-        while ((end = getchar()) != '\n' && end != EOF);
     }
 
     return is_valid;
