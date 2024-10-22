@@ -4,33 +4,46 @@
 #include <string.h>
 
 #include "../src/input_lib/input_lib.h"
+#include "../src/tests_lib/tests_case.h"
 #include "../src/tests_lib/tests_fixture.h"
-#include "../src/tests_lib/tests_logger.h"
 
-void test_input_str() {
+int test_input_str() {
+    int test_result = TEST_FAIL;
+
     char *input = NULL;
 
     read_file_in_stdin("tests/test_data/input_lib/test_input_str.txt");
 
     input = input_str(input);
-    assert(strcmp(input, "hello") == 0);
+    test_result = (strcmp(input, "hello") == 0);
 
     free(input);
+
+    return test_result;
 }
 
-void test_input_digit() {
+int test_input_digit() {
+    int test_result = TEST_FAIL;
+
     int number;
 
     read_file_in_stdin("tests/test_data/input_lib/test_input_digit.txt");
 
-    int result = input_digit(&number);
-    assert(result == 1);
-    assert(number == 42);
+    test_result = (input_digit(&number) == TEST_PASSED && number == 42);
+
+    return test_result;
 }
 
 int main() {
-    run_test((Test)test_input_str, 1, 2, "test_input_str");
-    run_test((Test)test_input_digit, 2, 2, "test_input_digit");
-    printf("All %d/%d tests passed!\n", 2, 2);
+    Test *test =
+        init_test("test_input_lib",
+                  " These test cases perform unit testing\n of the \"input_lib\" library functionality", 2,
+                  (TestCase)test_input_str, "test_input_str", (TestCase)test_input_digit, "test_input_digit");
+
+    if (test != NULL) {
+        run_test(test);
+        destroy_test(test);
+    }
+
     return 0;
 }

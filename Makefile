@@ -68,6 +68,10 @@ build: v
 	@echo "stage=\033[0;33m$(STAGE)\033[0m"
 	@echo "version=\033[0;33m$(VERSION)\033[0m"
 
+test_lib:
+	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/input_lib/*.c ./src/tests_lib/*.c ./tests/test_input_lib.c -o $(BUILD_TESTS_DIR)tests.out
+	$(BUILD_TESTS_DIR)tests.out
+
 # Run clang and cpp checks
 check:
 	@printf "+--------------------+\n│ %-20s │\n+--------------------+\n\n" "💅 clang check"
