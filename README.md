@@ -1,5 +1,7 @@
 # C lang custom Libs & Utils
 
+This repository is a collection of my useful tools that were formed to solve various tasks while I am studying the C language.
+
 ```
 project_root/
 ├── build/
