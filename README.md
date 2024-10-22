@@ -8,7 +8,9 @@ This repository is a collection of my useful tools that were formed to solve var
 ```
 project_root/
 ├── build/
-│   └── <executable_files>
+|   ├── tests/
+|   |   └── <tests_exec_files>
+│   └── <src_exec_files>
 ├── src/
 │   ├── input_lib/
 │   │   ├── input_lib.c
