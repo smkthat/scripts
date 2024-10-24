@@ -37,7 +37,7 @@ bool array_copy(array_t **copy, array_t *original);
 
 bool array_compare(array_t *, array_t *);
 
-bool array_concatinate(array_t *destination, array_t *source);
+bool array_concatenate(array_t *destination, array_t *source);
 
 bool array_push_back(array_t *, void *element);
 
@@ -45,6 +45,6 @@ void *array_front(array_t *);
 
 void *array_back(array_t *);
 
-void *pop_back(array_t *);
+void *array_pop_back(array_t *);
 
 #endif  // ARRAY_H
