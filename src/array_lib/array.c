@@ -21,6 +21,13 @@ void array_destroy(array_t *arr) {
     }
 }
 
+void *array_at(array_t *arr, int element_number) {
+    void *result = NULL;
+    if (!arr) return result;
+    if (element_number >= arr->length || element_number < 0) return result;
+    return arr->data + (element_number * arr->element_size);
+}
+
 bool array_push_back(array_t *arr, void *element) {
     bool result = true;
     if (arr) {

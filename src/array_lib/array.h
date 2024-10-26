@@ -18,6 +18,9 @@ array_t *array_new(int element_size);
 
 void array_destroy(array_t *);
 
+/*  Returns: NULL on failure
+ *         , pointer to an element on success.
+ */
 void *array_at(array_t *, int element_number);
 
 /* Returns: 1 on failure
