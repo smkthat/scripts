@@ -28,6 +28,32 @@ void *array_at(array_t *arr, int element_number) {
     return arr->data + (element_number * arr->element_size);
 }
 
+bool array_empty(array_t *arr) {
+    if (!arr) return true;
+    return arr->length == 0;
+}
+
+int array_size(array_t *arr) {
+    if (!arr) return false;
+    return arr->length;
+}
+
+bool array_copy(array_t **copy, array_t *original) {
+    if (!original) return false;
+    if ((*copy = malloc(sizeof(array_t))) == NULL) return false;
+    (*copy)->length = original->length;
+    (*copy)->element_size = original->element_size;
+    if (original->data) {
+        if (((*copy)->data = malloc((*copy)->length * (*copy)->element_size))
+            == NULL) {
+            free(*copy);
+            return false;
+        }
+        memcpy((*copy)->data, original->data, original->length * original->element_size);
+    }
+    return true;
+}
+
 bool array_push_back(array_t *arr, void *element) {
     bool result = true;
     if (arr) {

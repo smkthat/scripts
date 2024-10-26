@@ -29,6 +29,11 @@ void *array_at(array_t *, int element_number);
  */
 bool array_empty(array_t *);
 
+/* Returns: 0 on failure
+ *        , length on success.
+ */
+int array_size(array_t *);
+
 /* Note: in case if it's an array of pointers does not copy contents of what
  *       pointers point to.
  * Recieves: a pointer to not allocated array_t* to which copy will be taken to
