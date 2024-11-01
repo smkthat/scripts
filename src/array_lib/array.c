@@ -15,8 +15,7 @@ array_t *array_new(int element_size) {
 
 void array_destroy(array_t *arr) {
     if (arr) {
-        if (arr->data)
-            free(arr->data);
+        if (arr->data) free(arr->data);
         free(arr);
     }
 }
@@ -44,8 +43,7 @@ bool array_copy(array_t **copy, array_t *original) {
     (*copy)->length = original->length;
     (*copy)->element_size = original->element_size;
     if (original->data) {
-        if (((*copy)->data = malloc((*copy)->length * (*copy)->element_size))
-            == NULL) {
+        if (((*copy)->data = malloc((*copy)->length * (*copy)->element_size)) == NULL) {
             free(*copy);
             return false;
         }
@@ -61,9 +59,7 @@ bool array_push_back(array_t *arr, void *element) {
             uint8_t *tmp = realloc(arr->data, (arr->length + 1) * arr->element_size);
             if (tmp) {
                 arr->data = tmp;
-                memcpy(arr->data + (arr->length * arr->element_size),
-                       element,
-                       arr->element_size);
+                memcpy(arr->data + (arr->length * arr->element_size), element, arr->element_size);
                 arr->length++;
             } else
                 result = false;
