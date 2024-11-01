@@ -43,16 +43,24 @@ int array_size(array_t *);
  */
 bool array_copy(array_t **copy, array_t *original);
 
+// Note: unimplemented.
 bool array_compare(array_t *, array_t *);
 
+// Note: unimplemented.
 bool array_concatenate(array_t *destination, array_t *source);
 
+/* Returns: 0 on failure
+ *        , 1 on success.
+ */
 bool array_push_back(array_t *, void *element);
 
+// Note: unimplemented.
 void *array_front(array_t *);
 
+// Note: unimplemented.
 void *array_back(array_t *);
 
+// Note: unimplemented.
 void *array_pop_back(array_t *);
 
 #endif  // ARRAY_H

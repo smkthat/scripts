@@ -71,6 +71,8 @@ build: v
 test_lib:
 	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/input_lib/*.c ./src/tests_lib/*.c ./tests/test_input_lib.c -o $(BUILD_TESTS_DIR)tests.out
 	$(BUILD_TESTS_DIR)tests.out
+	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/array_lib/*.c ./src/tests_lib/*.c ./tests/test_array_lib.c -o $(BUILD_TESTS_DIR)tests.out
+	$(BUILD_TESTS_DIR)tests.out
 
 # Run clang and cpp checks
 check:
