@@ -29,7 +29,7 @@ void *array_at(array_t *, int element_number);
  */
 bool array_empty(array_t *);
 
-/* Returns: 0 on failure
+/* Returns: -1 on failure
  *        , length on success.
  */
 int array_size(array_t *);

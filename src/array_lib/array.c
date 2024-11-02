@@ -33,7 +33,7 @@ bool array_empty(array_t *arr) {
 }
 
 int array_size(array_t *arr) {
-    if (!arr) return false;
+    if (!arr) return -1;
     return arr->length;
 }
 
