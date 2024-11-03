@@ -76,7 +76,7 @@ void destroy_test(Test* test) {
 }
 
 int run_test_case(TestCase case_func, const int case_number, const int cases_size, const char* case_name) {
-    printf("・ %d/%-2d - %-25s", case_number, cases_size, case_name);
+    printf("・ %d/%-2d - %-40s", case_number, cases_size, case_name);
 
     clock_t start_time = clock();
 
