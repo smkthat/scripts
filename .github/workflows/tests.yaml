@@ -1,0 +1,25 @@
+name: GCC Build and Test
+
+on:
+  push:
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y make cppcheck
+      
+      - name: Use GCC
+        uses: Matt-DESTROYER/Use-GCC@v1.2
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build and run tests
+        run: make tests
