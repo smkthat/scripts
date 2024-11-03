@@ -35,15 +35,17 @@ int test_input_digit() {
 }
 
 int main() {
+    int is_success = TEST_FAIL;
     Test *test =
         init_test("test_input_lib",
                   " These test cases perform unit testing\n of the \"input_lib\" library functionality", 2,
                   (TestCase)test_input_str, "test_input_str", (TestCase)test_input_digit, "test_input_digit");
 
     if (test != NULL) {
+        is_success = test->fail == 0;
         run_test(test);
         destroy_test(test);
     }
 
-    return 0;
+    return is_success ? 0 : 1;
 }
