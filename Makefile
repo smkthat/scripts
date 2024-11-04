@@ -1,5 +1,5 @@
 # Variables
-V=0.0.2
+V=0.0.3
 VERSION=$(V)
 STAGE=dev # dev | debug | tests | release
 BUILD_POSTFIX=$(strip $(STAGE)_$(VERSION))
@@ -24,9 +24,7 @@ CC_DEBUG_FLAGSS=-g -O0 -fsanitize=address -fsanitize=leak -fsanitize=undefined -
 CPPCHECK_FLAGS=--enable=all --std=c11 --suppress=missingIncludeSystem --suppress=unusedFunction
 
 # Show current configuration
-config:
-	@echo "\n\033[1;32mMakefile $(V)\033[0m"
-	@echo
+config: v
 	@echo
 	@echo "\033[0;32mCommands\033[0m \033[3m(main commands)\033[0m"
 	@echo
@@ -62,6 +60,9 @@ config:
 	@printf "  %-15s %s\n" "logs" "$(LOGS_DIR)"
 	@printf "  %-15s %s\n" "build" "$(BUILD_DIR)"
 	@printf "  %-15s %s\n" "build/tests" "$(BUILD_TESTS_DIR)"
+
+all: build
+
 
 build: v
 	@echo "\033[0;32mStart building project\033[0m"
@@ -117,6 +118,13 @@ prepare:
 		mkdir $(LOGS_DIR); \
 	fi
 
+clean:
+	@echo "Cleaning project"
+	rm -f $(BUILD_DIR)*.out $(BUILD_TESTS_DIR)*.out
+	@if [ -d $(BUILD_DIR)*.out.dSYM ]; then \
+		rm -r $(BUILD_DIR)*.out.dSYM; \
+	fi
+
 # Show current Makefile version
 v:
-	@echo $(V)
+	@echo "\n\033[1;32mMakefile: $(V)\033[0m"
