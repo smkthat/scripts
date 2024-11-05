@@ -1,5 +1,5 @@
 # Variables
-V=0.0.1
+V=0.0.3
 VERSION=$(V)
 STAGE=dev # dev | debug | tests | release
 BUILD_POSTFIX=$(strip $(STAGE)_$(VERSION))
@@ -24,9 +24,7 @@ CC_DEBUG_FLAGSS=-g -O0 -fsanitize=address -fsanitize=leak -fsanitize=undefined -
 CPPCHECK_FLAGS=--enable=all --std=c11 --suppress=missingIncludeSystem --suppress=unusedFunction
 
 # Show current configuration
-config:
-	@echo "\n\033[1;32mMakefile $(V)\033[0m"
-	@echo
+config: v
 	@echo
 	@echo "\033[0;32mCommands\033[0m \033[3m(main commands)\033[0m"
 	@echo
@@ -63,30 +61,37 @@ config:
 	@printf "  %-15s %s\n" "build" "$(BUILD_DIR)"
 	@printf "  %-15s %s\n" "build/tests" "$(BUILD_TESTS_DIR)"
 
+all: build
+
+
 build: v
 	@echo "\033[0;32mStart building project\033[0m"
 	@echo "stage=\033[0;33m$(STAGE)\033[0m"
 	@echo "version=\033[0;33m$(VERSION)\033[0m"
 
-test_lib:
-	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/input_lib/*.c ./src/tests_lib/*.c ./tests/test_input_lib.c -o $(BUILD_TESTS_DIR)tests.out
-	$(BUILD_TESTS_DIR)tests.out
-	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/array_lib/*.c ./src/tests_lib/*.c ./tests/test_array_lib.c -o $(BUILD_TESTS_DIR)tests.out
-	$(BUILD_TESTS_DIR)tests.out
+tests: v prepare check test_input_lib test_array_lib
+
+test_input_lib:
+	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/input_lib/*.c ./src/tests_lib/*.c ./tests/test_input_lib.c -o $(BUILD_TESTS_DIR)test_input_lib.out
+	$(BUILD_TESTS_DIR)test_input_lib.out
+
+test_array_lib:
+	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/array_lib/*.c ./src/tests_lib/*.c ./tests/test_array_lib.c -o $(BUILD_TESTS_DIR)test_array_lib.out
+	$(BUILD_TESTS_DIR)test_array_lib.out
 
 # Run clang and cpp checks
 check:
-	@printf "+--------------------+\n│ %-20s │\n+--------------------+\n\n" "💅 clang check"
+	@printf "+--------------------+\n│ %-20s │\n+--------------------+\n" "💅 clang check"
 	@if clang-format -n $(SRC_DIR)**/*.[ch]; then \
-		echo "\033[0;32mNo style errors found.\033[0m\n\n"; \
+		echo "\033[0;32mNo style errors found.\033[0m\n"; \
 	else \
 		"\033[0;31mStyle errors detected! Please run `make format` to fix them.\033[0m\n\n"; \
 		exit 1; \
 	fi
-	@printf "+--------------------+\n│ %-20s │\n+--------------------+\n\n" "📋 cpp check"
-	cppcheck $(CPPCHECK_FLAGS) --checkers-report=$(LOGS_DIR)cppcheck_src.log $(SRC_DIR)
-	cppcheck $(CPPCHECK_FLAGS) --suppress=ignoredReturnValue --checkers-report=$(LOGS_DIR)cppcheck_tests.log $(TESTS_DIR)
-	@echo "\n\033[0;32mAll checks complete.\033[0m";
+	@printf "+--------------------+\n│ %-20s │\n+--------------------+\n" "📋 cpp check"
+	cppcheck $(CPPCHECK_FLAGS) $(SRC_DIR)
+	cppcheck $(CPPCHECK_FLAGS) --suppress=ignoredReturnValue $(TESTS_DIR)
+	@echo "\033[0;32mAll checks complete.\033[0m";
 
 # Run clang formatting
 format:
@@ -95,9 +100,31 @@ format:
 	@echo clang-format -i $(TESTS_DIR)*.[ch] $(TESTS_DIR)**/*.[ch]
 	@find $(SRC_DIR) -type f \( -name '*.c' -o -name '*.h' \) -exec clang-format -i {} +
 	@find $(TESTS_DIR) -type f \( -name '*.c' -o -name '*.h' \) -exec clang-format -i {} +
-	@echo "\n\033[0;32mFormat complete.\033[0m\n\n";
+	@echo "\033[0;32mFormat complete.\033[0m\n";
 
+# Prepare project directories
+prepare:
+	@echo "Prepare directories"
+	@if [ ! -d $(BUILD_DIR) ]; then \
+		echo "Creating build directory..."; \
+		mkdir $(BUILD_DIR); \
+	fi
+	@if [ ! -d $(BUILD_TESTS_DIR) ]; then \
+		echo "Creating build/tests directory..."; \
+		mkdir $(BUILD_TESTS_DIR); \
+	fi
+	@if [ ! -d $(LOGS_DIR) ]; then \
+		echo "Creating logs directory..."; \
+		mkdir $(LOGS_DIR); \
+	fi
+
+clean:
+	@echo "Cleaning project"
+	rm -f $(BUILD_DIR)*.out $(BUILD_TESTS_DIR)*.out
+	@if [ -d $(BUILD_DIR)*.out.dSYM ]; then \
+		rm -r $(BUILD_DIR)*.out.dSYM; \
+	fi
 
 # Show current Makefile version
 v:
-	@echo $(V)
+	@echo "\n\033[1;32mMakefile: $(V)\033[0m"
