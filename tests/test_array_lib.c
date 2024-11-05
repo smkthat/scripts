@@ -68,14 +68,33 @@ int test_array_int32_size1_push() {
     return result;
 }
 
+/* Fill 15 0x12345678,
+ * Push 0x89ABCDEF
+ */
+int test_array_int32_filled_push() {
+    int result = TEST_PASSED;
+    int32_t val = 0x12345678;
+    array_t *arr = array_new_filled(sizeof(int32_t), 15, &val);
+    val = 0x89ABCDEF;
+    result &= array_push(arr, &val);
+    result &= arr != NULL;
+    for (int i = 0; i < 15; i++) {
+        result &= *(int32_t *)array_at(arr, i) == 0x12345678;
+    }
+    result &= *(int32_t *)array_at(arr, 15) == (int32_t)0x89ABCDEF;
+    array_destroy(arr);
+    return result;
+}
+
 int main() {
     Test *test = init_test(
         "test_array_lib", " These test cases perform unit testing\n of the \"array\" library functionality",
-        5, (TestCase)test_array_invalid_element_size_new, "test_array_invalid_element_size_new",
+        6, (TestCase)test_array_invalid_element_size_new, "test_array_invalid_element_size_new",
         (TestCase)test_array_int16_new_filled, "test_array_int16_new_filled",
         (TestCase)test_array_int32_zerosize_push, "test_array_int32_zerosize_push",
         (TestCase)test_array_int64_zerosize_push, "test_array_int64_zerosize_push",
-        (TestCase)test_array_int32_size1_push, "test_array_int32_size1_push");
+        (TestCase)test_array_int32_size1_push, "test_array_int32_size1_push",
+        (TestCase)test_array_int32_filled_push, "test_array_int32_filled_push");
     if (test) {
         run_test(test);
         destroy_test(test);

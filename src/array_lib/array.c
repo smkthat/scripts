@@ -10,10 +10,8 @@ array_t *array_new(int element_size) {
         result->length = 0;
         result->element_size = element_size;
         result->data = NULL;
-        return result;
     }
-    array_destroy(result);
-    return NULL;
+    return result;
 }
 
 array_t *array_new_filled(int element_size, int length, const void *element) {
