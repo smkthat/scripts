@@ -4,14 +4,27 @@
 #include <string.h>
 
 array_t *array_new(int element_size) {
+    if (element_size < 0) return NULL;
     array_t *result = malloc(sizeof(array_t));
-    if (result && element_size > 0) {
+    if (result) {
         result->length = 0;
         result->element_size = element_size;
         result->data = NULL;
+        return result;
     }
-    return result;
+    array_destroy(result);
+    return NULL;
 }
+
+/*
+array_t *array_new_filled(int element_size, int length, void *element) {
+    if (length < 0 || !element) return NULL;
+    array_t *result = array_new(element_size);
+    if (!result) return NULL;
+    result-> = malloc(element_size * length);
+    
+}
+*/
 
 void array_destroy(array_t *arr) {
     if (arr) {

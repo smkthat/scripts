@@ -16,6 +16,13 @@ typedef struct {
  */
 array_t *array_new(int element_size);
 
+array_t *arrat_new_filled(int element_size, int length, void* element);
+
+/* Returns: 0 on failure
+ *        , 1 on success
+ */
+bool array_clear(array_t *);
+
 void array_destroy(array_t *);
 
 /*  Returns: NULL on failure
@@ -33,6 +40,11 @@ bool array_empty(array_t *);
  *        , length on success.
  */
 int array_size(array_t *);
+
+/* Returns: -1 on failure
+ *        , length * element_size on success.
+ */
+int array_memsize(array_t *);
 
 /* Note: in case if it's an array of pointers does not copy contents of what
  *       pointers point to.
@@ -53,6 +65,7 @@ bool array_concatenate(array_t *destination, array_t *source);
  *        , 1 on success.
  */
 bool array_push_back(array_t *, void *element);
+typedef array_push_back array_push;
 
 // Note: unimplemented.
 void *array_front(array_t *);
