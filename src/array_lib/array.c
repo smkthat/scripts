@@ -4,7 +4,7 @@
 #include <string.h>
 
 array_t *array_new(int element_size) {
-    if (element_size < 0) return NULL;
+    if (element_size <= 0) return NULL;
     array_t *result = malloc(sizeof(array_t));
     if (result) {
         result->length = 0;

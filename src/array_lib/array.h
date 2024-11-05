@@ -65,7 +65,7 @@ bool array_concatenate(array_t *destination, array_t *source);
  *        , 1 on success.
  */
 bool array_push_back(array_t *, void *element);
-typedef array_push_back array_push;
+#define array_push array_push_back
 
 // Note: unimplemented.
 void *array_front(array_t *);

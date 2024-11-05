@@ -47,10 +47,19 @@ int test_array_int32_size1_push() {
     return result;
 }
 
+int test_array_invalid_element_size_new() {
+    array_t *arr0 = array_new(0);
+    array_t *arr1 = array_new(-1);
+    array_destroy(arr0);
+    array_destroy(arr1);
+    return arr0 == NULL && arr1 == NULL;
+}
+
 int main() {
     Test *test = init_test("test_array_lib",
                            " These test cases perform unit testing\n of the \"array\" library functionality",
-                           3, (TestCase)test_array_int32_zerosize_push, "test_array_int32_zerosize_push",
+                           4, (TestCase)test_array_invalid_element_size_new, "test_array_invalid_element_size_new",
+                           (TestCase)test_array_int32_zerosize_push, "test_array_int32_zerosize_push",
                            (TestCase)test_array_int64_zerosize_push, "test_array_int64_zerosize_push",
                            (TestCase)test_array_int32_size1_push, "test_array_int32_size1_push");
     if (test) {
