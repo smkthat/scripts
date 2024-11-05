@@ -28,23 +28,23 @@ void array_destroy(array_t *);
 /*  Returns: NULL on failure
  *         , pointer to an element on success.
  */
-void *array_at(array_t *, int element_number);
+void *array_at(const array_t *, int element_number);
 
 /* Returns: 1 on failure
  *        , 1 if empty
  *        , 0 if not empty.
  */
-bool array_empty(array_t *);
+bool array_empty(const array_t *);
 
 /* Returns: -1 on failure
  *        , length on success.
  */
-int array_size(array_t *);
+int array_size(const array_t *);
 
 /* Returns: -1 on failure
  *        , length * element_size on success.
  */
-int array_memsize(array_t *);
+int array_memsize(const array_t *);
 
 /* Note: in case if it's an array of pointers does not copy contents of what
  *       pointers point to.
@@ -53,7 +53,7 @@ int array_memsize(array_t *);
  * Returns: 0 on failure
  *        , 1 on success.
  */
-bool array_copy(array_t **copy, array_t *original);
+bool array_copy(array_t **copy, const array_t *original);
 
 // Note: unimplemented.
 bool array_compare(array_t *, array_t *);
@@ -64,7 +64,7 @@ bool array_concatenate(array_t *destination, array_t *source);
 /* Returns: 0 on failure
  *        , 1 on success.
  */
-bool array_push_back(array_t *, void *element);
+bool array_push_back(array_t *, const void *element);
 #define array_push array_push_back
 
 // Note: unimplemented.

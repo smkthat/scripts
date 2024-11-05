@@ -33,24 +33,24 @@ void array_destroy(array_t *arr) {
     }
 }
 
-void *array_at(array_t *arr, int element_number) {
+void *array_at(const array_t *arr, int element_number) {
     void *result = NULL;
     if (!arr) return result;
     if (element_number >= arr->length || element_number < 0) return result;
     return arr->data + (element_number * arr->element_size);
 }
 
-bool array_empty(array_t *arr) {
+bool array_empty(const array_t *arr) {
     if (!arr) return true;
     return arr->length == 0;
 }
 
-int array_size(array_t *arr) {
+int array_size(const array_t *arr) {
     if (!arr) return -1;
     return arr->length;
 }
 
-bool array_copy(array_t **copy, array_t *original) {
+bool array_copy(array_t **copy, const array_t *original) {
     if (!original) return false;
     if ((*copy = malloc(sizeof(array_t))) == NULL) return false;
     (*copy)->length = original->length;
@@ -65,7 +65,7 @@ bool array_copy(array_t **copy, array_t *original) {
     return true;
 }
 
-bool array_push_back(array_t *arr, void *element) {
+bool array_push_back(array_t *arr, const void *element) {
     bool result = true;
     if (arr) {
         if (arr->data) {
