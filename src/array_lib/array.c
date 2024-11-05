@@ -16,15 +16,22 @@ array_t *array_new(int element_size) {
     return NULL;
 }
 
-/*
-array_t *array_new_filled(int element_size, int length, void *element) {
-    if (length < 0 || !element) return NULL;
+array_t *array_new_filled(int element_size, int length, const void *element) {
+    if (length <= 0 || !element) return NULL;
     array_t *result = array_new(element_size);
     if (!result) return NULL;
-    result-> = malloc(element_size * length);
-    
+    result->length = length;
+    result->data = malloc(element_size * length);
+    if (result->data)
+        for (int i = 0; i < length; i++) {
+            memcpy(array_at(result, i), element, element_size);
+        }
+    else {
+        array_destroy(result);
+        return NULL;
+    }
+    return result;
 }
-*/
 
 void array_destroy(array_t *arr) {
     if (arr) {

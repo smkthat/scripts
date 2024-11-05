@@ -16,7 +16,7 @@ typedef struct {
  */
 array_t *array_new(int element_size);
 
-array_t *arrat_new_filled(int element_size, int length, void* element);
+array_t *array_new_filled(int element_size, int length, const void *element);
 
 /* Returns: 0 on failure
  *        , 1 on success
