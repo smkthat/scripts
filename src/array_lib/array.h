@@ -41,7 +41,7 @@ bool array_empty(const array_t *);
  */
 int array_size(const array_t *);
 
-/* Returns: -1 on failure
+/* Returns: 0 on failure
  *        , length * element_size on success.
  */
 int array_memsize(const array_t *);
@@ -67,7 +67,9 @@ bool array_concatenate(array_t *destination, array_t *source);
 bool array_push_back(array_t *, const void *element);
 #define array_push array_push_back
 
-// Note: unimplemented.
+/*  Returns: NULL on failure
+ *         , pointer to an element on success.
+ */
 void *array_front(array_t *);
 
 // Note: unimplemented.

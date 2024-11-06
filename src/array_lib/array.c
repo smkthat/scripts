@@ -31,6 +31,16 @@ array_t *array_new_filled(int element_size, int length, const void *element) {
     return result;
 }
 
+bool array_clear(array_t *arr) {
+    if (!arr) return false;
+    if (arr->data) {
+        free(arr->data);
+        arr->data = NULL;
+    }
+    arr->length = 0;
+    return true;
+}
+
 void array_destroy(array_t *arr) {
     if (arr) {
         if (arr->data) free(arr->data);
@@ -53,6 +63,11 @@ bool array_empty(const array_t *arr) {
 int array_size(const array_t *arr) {
     if (!arr) return -1;
     return arr->length;
+}
+
+int array_memsize(const array_t *arr) {
+    if (!arr) return 0;
+    return arr->length * arr->element_size;
 }
 
 bool array_copy(array_t **copy, const array_t *original) {
@@ -91,4 +106,11 @@ bool array_push_back(array_t *arr, const void *element) {
     } else
         result = false;
     return result;
+}
+
+void *array_front(array_t *arr) {
+    void *result = NULL;
+    if (!arr) return result;
+    if (0 >= arr->length) return result;
+    return arr->data;
 }
