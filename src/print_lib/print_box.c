@@ -198,6 +198,7 @@ void print_footer_multiline(PrintBox* box, const wchar_t* footer_text) {
 void destroy_print_box(PrintBox* box) {
     if (box) {
         setlocale(LC_CTYPE, NULL);
+        free(box->locale);
         free(box);
     }
 }
