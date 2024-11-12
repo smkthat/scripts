@@ -20,7 +20,7 @@ endif
 
 # Options
 CC_FLAGS=-Wall -Werror -Wextra -std=c11
-CC_DEBUG_FLAGSS=-g -O0 -fsanitize=address -fsanitize=leak -fsanitize=undefined -fsanitize=unreachable
+CC_DEBUG_FLAGSS=-g -O0 -fsanitize=address -fsanitize=undefined -fsanitize=unreachable
 CPPCHECK_FLAGS=--enable=all --std=c11 --suppress=missingIncludeSystem --suppress=unusedFunction
 
 # Show current configuration
@@ -68,14 +68,18 @@ build: v
 	@echo "stage=\033[0;33m$(STAGE)\033[0m"
 	@echo "version=\033[0;33m$(VERSION)\033[0m"
 
-tests: v prepare check test_input_lib test_array_lib
+tests: v prepare check test_print_lib test_input_lib test_array_lib
+
+test_print_lib:
+	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/tests_lib/*.c ./src/print_lib/*c ./tests/test_print_lib.c -o $(BUILD_TESTS_DIR)test_print_lib.out
+	$(BUILD_TESTS_DIR)test_print_lib.out
 
 test_input_lib:
-	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/input_lib/*.c ./src/tests_lib/*.c ./tests/test_input_lib.c -o $(BUILD_TESTS_DIR)test_input_lib.out
+	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/input_lib/*.c ./src/tests_lib/*.c ./src/print_lib/*c ./tests/test_input_lib.c -o $(BUILD_TESTS_DIR)test_input_lib.out
 	$(BUILD_TESTS_DIR)test_input_lib.out
 
 test_array_lib:
-	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/array_lib/*.c ./src/tests_lib/*.c ./tests/test_array_lib.c -o $(BUILD_TESTS_DIR)test_array_lib.out
+	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/array_lib/*.c ./src/tests_lib/*.c ./src/print_lib/*c ./tests/test_array_lib.c -o $(BUILD_TESTS_DIR)test_array_lib.out
 	$(BUILD_TESTS_DIR)test_array_lib.out
 
 # Run clang and cpp checks
