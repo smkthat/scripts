@@ -5,7 +5,7 @@
 
 #include "../src/array_lib/array.h"
 #include "../src/tests_lib/tests_case.h"
-#include "../src/tests_lib/tests_fixture.h"
+#include "../src/tests_lib/tests_helper.h"
 
 #define INT32_ZEROSIZE_PUSH_CASE 0x12345678
 #define INT64_ZEROSIZE_PUSH_CASE 0x123456789ABCDEF0

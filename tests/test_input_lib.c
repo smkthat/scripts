@@ -5,7 +5,7 @@
 
 #include "../src/input_lib/input_lib.h"
 #include "../src/tests_lib/tests_case.h"
-#include "../src/tests_lib/tests_fixture.h"
+#include "../src/tests_lib/tests_helper.h"
 
 int test_input_str() {
     int test_result = TEST_FAIL;
