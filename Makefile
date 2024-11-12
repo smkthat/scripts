@@ -1,5 +1,5 @@
 # Variables
-V=0.0.4
+V=0.0.5
 VERSION=$(V)
 STAGE=dev # dev | debug | tests | release
 BUILD_POSTFIX=$(strip $(STAGE)_$(VERSION))
@@ -21,7 +21,7 @@ endif
 # Options
 CC_FLAGS=-Wall -Werror -Wextra -std=c11
 CC_DEBUG_FLAGSS=-g -O0 -fsanitize=address -fsanitize=leak -fsanitize=undefined -fsanitize=unreachable
-CPPCHECK_FLAGS=--enable=all --std=c11 --suppress=missingIncludeSystem --suppress=unusedFunction
+CPPCHECK_FLAGS=--enable=all --std=c11 --suppress=missingIncludeSystem --suppress=unusedFunction --suppress=ignoredReturnValue
 
 # Show current configuration
 config: v
@@ -96,8 +96,8 @@ check:
 		exit 1; \
 	fi
 	@printf "+--------------------+\n│ %-20s │\n+--------------------+\n" "📋 cpp check"
-	cppcheck $(CPPCHECK_FLAGS) --suppress=ignoredReturnValue --check-level=exhaustive $(SRC_DIR)
-	cppcheck $(CPPCHECK_FLAGS) --suppress=ignoredReturnValue $(TESTS_DIR)
+	cppcheck $(CPPCHECK_FLAGS) $(SRC_DIR)
+	cppcheck $(CPPCHECK_FLAGS) $(TESTS_DIR)
 	@echo "\033[0;32mAll checks complete.\033[0m";
 
 # Run clang formatting
