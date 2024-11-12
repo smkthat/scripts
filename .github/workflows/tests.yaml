@@ -16,14 +16,7 @@ jobs:
 
     steps:
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y make cppcheck locales
-
-      - name: Generate and set locale
-        run: |
-          sudo locale-gen ru_RU.UTF-8
-          sudo update-locale LANG=ru_RU.UTF-8
-          export LANG=ru_RU.UTF-8
-          export LC_ALL=ru_RU.UTF-8
+        run: sudo apt-get update && sudo apt-get install -y make cppcheck language-pack-RU
 
       - name: Use GCC
         uses: Matt-DESTROYER/Use-GCC@v1.2
