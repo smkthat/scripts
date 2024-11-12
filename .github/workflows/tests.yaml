@@ -22,6 +22,8 @@ jobs:
         run: |
           sudo locale-gen ru_RU.UTF-8
           sudo update-locale LANG=ru_RU.UTF-8
+          export LANG=ru_RU.UTF-8
+          export LC_ALL=ru_RU.UTF-8
 
       - name: Use GCC
         uses: Matt-DESTROYER/Use-GCC@v1.2
