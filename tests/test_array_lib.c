@@ -1,8 +1,3 @@
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "../src/array_lib/array.h"
 #include "../src/tests_lib/tests_case.h"
 #include "../src/tests_lib/tests_helper.h"
@@ -48,11 +43,12 @@ int test_array_int32_size1_push() {
 }
 
 int main() {
-    Test *test = init_test("test_array_lib",
-                           " These test cases perform unit testing\n of the \"array\" library functionality",
-                           3, (TestCase)test_array_int32_zerosize_push, "test_array_int32_zerosize_push",
-                           (TestCase)test_array_int64_zerosize_push, "test_array_int64_zerosize_push",
-                           (TestCase)test_array_int32_size1_push, "test_array_int32_size1_push");
+    Test *test =
+        init_test(L"test_array_lib",
+                  L"These test cases perform unit testing of the \"array_lib\" library functionality", 3,
+                  (TestCase)test_array_int32_zerosize_push, L"test_array_int32_zerosize_push",
+                  (TestCase)test_array_int64_zerosize_push, L"test_array_int64_zerosize_push",
+                  (TestCase)test_array_int32_size1_push, L"test_array_int32_size1_push");
     if (test) {
         run_test(test);
         destroy_test(test);

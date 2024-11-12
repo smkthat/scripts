@@ -1,5 +1,5 @@
 # Variables
-V=0.0.3
+V=0.0.4
 VERSION=$(V)
 STAGE=dev # dev | debug | tests | release
 BUILD_POSTFIX=$(strip $(STAGE)_$(VERSION))
@@ -71,14 +71,19 @@ build: v
 	@echo "stage=\033[0;33m$(STAGE)\033[0m"
 	@echo "version=\033[0;33m$(VERSION)\033[0m"
 
-tests: v prepare check test_input_lib test_array_lib
+tests: v prepare check test_print_lib test_input_lib test_array_lib
+	@echo "\n\033[0;32mAll tests complete.\033[0m\n"; \
+
+test_print_lib:
+	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/tests_lib/*.c ./src/print_lib/*c ./tests/test_print_lib.c -o $(BUILD_TESTS_DIR)test_print_lib.out
+	$(BUILD_TESTS_DIR)test_print_lib.out
 
 test_input_lib:
-	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/input_lib/*.c ./src/tests_lib/*.c ./tests/test_input_lib.c -o $(BUILD_TESTS_DIR)test_input_lib.out
+	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/input_lib/*.c ./src/tests_lib/*.c ./src/print_lib/*c ./tests/test_input_lib.c -o $(BUILD_TESTS_DIR)test_input_lib.out
 	$(BUILD_TESTS_DIR)test_input_lib.out
 
 test_array_lib:
-	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/array_lib/*.c ./src/tests_lib/*.c ./tests/test_array_lib.c -o $(BUILD_TESTS_DIR)test_array_lib.out
+	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/array_lib/*.c ./src/tests_lib/*.c ./src/print_lib/*c ./tests/test_array_lib.c -o $(BUILD_TESTS_DIR)test_array_lib.out
 	$(BUILD_TESTS_DIR)test_array_lib.out
 
 # Run clang and cpp checks
@@ -91,7 +96,7 @@ check:
 		exit 1; \
 	fi
 	@printf "+--------------------+\n│ %-20s │\n+--------------------+\n" "📋 cpp check"
-	cppcheck $(CPPCHECK_FLAGS) $(SRC_DIR)
+	cppcheck $(CPPCHECK_FLAGS) --suppress=ignoredReturnValue --check-level=exhaustive $(SRC_DIR)
 	cppcheck $(CPPCHECK_FLAGS) --suppress=ignoredReturnValue $(TESTS_DIR)
 	@echo "\033[0;32mAll checks complete.\033[0m";
 

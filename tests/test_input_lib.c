@@ -1,5 +1,3 @@
-#include <assert.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -36,14 +34,14 @@ int test_input_digit() {
 
 int main() {
     int is_success = TEST_FAIL;
-    Test *test =
-        init_test("test_input_lib",
-                  " These test cases perform unit testing\n of the \"input_lib\" library functionality", 2,
-                  (TestCase)test_input_str, "test_input_str", (TestCase)test_input_digit, "test_input_digit");
+    Test *test = init_test(
+        L"test_input_lib",
+        L"These test cases perform unit testing of the \"input_lib\" library functionality", 2,
+        (TestCase)test_input_str, L"test_input_str", (TestCase)test_input_digit, L"test_input_digit");
 
     if (test != NULL) {
-        is_success = test->fail == 0;
         run_test(test);
+        is_success = test->fail == 0;
         destroy_test(test);
     }
 
