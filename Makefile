@@ -28,18 +28,20 @@ config: v
 	@echo
 	@echo "\033[0;32mCommands\033[0m \033[3m(main commands)\033[0m"
 	@echo
-	@printf "  \033[0;33m%-15s\033[0m - %s\n" "make build" "Run build target stage"
+	@printf "  \033[0;33m%-15s\033[0m - %s\n" "make config" "(this) Show current Makefile configuration"
+	@printf "  \033[0;33m%-15s\033[0m - %s\n" "make build" "Build target stage"
+	@printf "  \033[0;33m%-15s\033[0m - %s\n" "make tests" "Build and execute all tests"
 	@printf "  \033[0;33m%-15s\033[0m - %s\n" "make check" "Run clang and cpp checks"
 	@printf "  \033[0;33m%-15s\033[0m - %s\n" "make format" "Run clang formatting"
-	@printf "  \033[0;33m%-15s\033[0m - %s\n" "make config" "(this) Show current Makefile configuration"
+	@printf "  \033[0;33m%-15s\033[0m - %s\n" "make clean" "Cleanup build directories"
 	@printf "  \033[0;33m%-15s\033[0m - %s\n" "make v" "Show current Makefile version"
 	@echo
 	@echo
 	@echo "\033[0;32mVariables\033[0m \033[3m(variables for using with commands)\033[0m"
 	@echo
 	@printf "  %-15s - %s\n" "STAGE" "[ dev | debug | tests | release ]"
-	@printf "  %-15s - %s\n" "VERSION" "Any text"
-	@printf "  %-15s - %s\n" "BUILD_POSTFIX" "Replace \"%STAGE_%VERSION\" pattern"
+	@printf "  %-15s - %s\n" "VERSION" "Any text without spaces"
+	@printf "  %-15s - %s\n" "BUILD_POSTFIX" "Replace \"%STAGE%_%VERSION%\" pattern"
 	@echo
 	@echo "  \033[3mUsage example\033[0m:"
 	@echo "  > make build STAGE=release VERSION=1.2"
