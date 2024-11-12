@@ -1,8 +1,3 @@
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "../src/array_lib/array.h"
 #include "../src/tests_lib/tests_case.h"
 #include "../src/tests_lib/tests_helper.h"

@@ -1,7 +1,7 @@
 build
 logs
 *.out
-
+*.tmp
 .vscode
 .idea
 *.dSYM
