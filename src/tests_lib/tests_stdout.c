@@ -2,7 +2,7 @@
 
 StdoutComparator *init_comparator(int buffer_size, StdoutDataType data_type) {
     StdoutComparator *comparator = malloc(sizeof(StdoutComparator));
-    if (comparator) {
+    if (comparator != NULL) {
         comparator->original_stdout = stdout;
         comparator->temp_file = NULL;
         comparator->buffer_size = buffer_size;
@@ -27,7 +27,7 @@ StdoutComparator *init_comparator(int buffer_size, StdoutDataType data_type) {
 }
 
 int redirect_stdout(StdoutComparator *comparator, const char *tmp) {
-    if (comparator) {
+    if (comparator != NULL) {
         comparator->temp_file = freopen(tmp, "w+", stdout);
     }
 
@@ -36,7 +36,7 @@ int redirect_stdout(StdoutComparator *comparator, const char *tmp) {
 
 int catch_stdout(StdoutComparator *comparator) {
     int is_success = 0;
-    if (comparator && comparator->temp_file != NULL) {
+    if (comparator != NULL && comparator->temp_file != NULL) {
         fflush(stdout);
         fseek(comparator->temp_file, 0, SEEK_SET);
 
@@ -88,19 +88,24 @@ int compare_with_file(const StdoutComparator *comparator, const char *src_path) 
 }
 
 void restore_origin_stdout(StdoutComparator *comparator) {
-    if (comparator->temp_file) {
-        fclose(comparator->temp_file);
-    }
+    if (comparator != NULL) {
+        if (comparator->temp_file) {
+            fclose(comparator->temp_file);
+        }
 
-    stdout = comparator->original_stdout;
+        stdout = comparator->original_stdout;
+
 #ifdef _WIN32
-    freopen("CON", "w", stdout);
+        freopen("CON", "w", stdout);
 #else
-    freopen("/dev/tty", "w", stdout);
+        freopen("/dev/tty", "w", stdout);
 #endif
+    }
 }
 
 void destroy_comparator(StdoutComparator *comparator) {
-    if (comparator->buffer) free(comparator->buffer);
-    free(comparator);
+    if (comparator != NULL) {
+        if (comparator->buffer) free(comparator->buffer);
+        free(comparator);
+    }
 }
