@@ -10,7 +10,7 @@ int test_input_str() {
 
     char *input = NULL;
 
-    open_file_as_stdin("tests/test_data/input_lib/test_input_str.txt");
+    read_file_in_stdin("tests/test_data/input_lib/test_input_str.txt");
 
     input = input_str(input);
     test_result = (strcmp(input, "hello") == 0);

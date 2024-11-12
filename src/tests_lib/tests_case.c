@@ -53,9 +53,10 @@ Test* run_test(Test* test) {
         test->complete += 1;
     }
 
-    printf_text(test->print_box, L"\nTotal cases %d, Completed %d, Passed %d, Failed %d\n\n%ls", test->total,
-                test->complete, test->passed, test->fail,
-                test->total == test->passed ? L"✓ All tests passed!" : L"✗ Cases completed with errors.");
+    print_formatted_text(
+        test->print_box, L"\nTotal cases %d, Completed %d, Passed %d, Failed %d\n\n%ls", test->total,
+        test->complete, test->passed, test->fail,
+        test->total == test->passed ? L"✓ All tests passed!" : L"✗ Cases completed with errors.");
     print_footer_line(test->print_box);
 
     return test;
@@ -77,8 +78,8 @@ int run_test_case(TestCase case_func, const int case_number, const int cases_siz
     clock_t end_time = clock();
     double time_taken = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
 
-    printf_text(print_box, L"%ls %d/%d - %-40ls %-6ls in %.2f seconds.", is_passed ? L"✓" : L"✗", case_number,
-                cases_size, case_name, is_passed ? L"PASSED" : L"FAIL", time_taken);
+    print_formatted_text(print_box, L"%ls %d/%d - %-40ls %-6ls in %.2f seconds.", is_passed ? L"✓" : L"✗",
+                         case_number, cases_size, case_name, is_passed ? L"PASSED" : L"FAIL", time_taken);
 
     return is_passed;
 }

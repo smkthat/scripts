@@ -1,6 +1,6 @@
 #include "tests_stdout.h"
 
-StdoutComparator *initialize_comparator(int buffer_size, StdoutDataType data_type) {
+StdoutComparator *init_comparator(int buffer_size, StdoutDataType data_type) {
     StdoutComparator *comparator = malloc(sizeof(StdoutComparator));
     if (comparator) {
         comparator->original_stdout = stdout;
@@ -26,26 +26,37 @@ StdoutComparator *initialize_comparator(int buffer_size, StdoutDataType data_typ
     return comparator;
 }
 
-int redirect_stdout(StdoutComparator *comparator, const char *tmp_path) {
-    comparator->temp_file = freopen(tmp_path, "w+", stdout);
-    return comparator->temp_file != NULL;
-}
-
-void catch_stdout(StdoutComparator *comparator) {
-    fflush(stdout);
-    fseek(comparator->temp_file, 0, SEEK_SET);
-
-    switch (comparator->data_type) {
-        case CHAR_TYPE:
-            fgets((char *)comparator->buffer, comparator->buffer_size, comparator->temp_file);
-            break;
-        case WCHAR_TYPE:
-            fgetws((wchar_t *)comparator->buffer, comparator->buffer_size, comparator->temp_file);
-            break;
+int redirect_stdout(StdoutComparator *comparator, const char *tmp) {
+    if (comparator) {
+        comparator->temp_file = freopen(tmp, "w+", stdout);
     }
+
+    return comparator && comparator->temp_file != NULL;
 }
 
-int compare_files(StdoutComparator *comparator, const char *src_path) {
+int catch_stdout(StdoutComparator *comparator) {
+    int is_success = 0;
+    if (comparator && comparator->temp_file != NULL) {
+        fflush(stdout);
+        fseek(comparator->temp_file, 0, SEEK_SET);
+
+        switch (comparator->data_type) {
+            case CHAR_TYPE:
+                fgets((char *)comparator->buffer, comparator->buffer_size, comparator->temp_file);
+                break;
+            case WCHAR_TYPE:
+                fgetws((wchar_t *)comparator->buffer, comparator->buffer_size, comparator->temp_file);
+                break;
+        }
+
+        is_success = 1;
+    }
+
+    restore_origin_stdout(comparator);
+    return is_success;
+}
+
+int compare_with_file(const StdoutComparator *comparator, const char *src_path) {
     FILE *src_file = fopen(src_path, "r");
     int is_success = 0;
 
@@ -76,16 +87,20 @@ int compare_files(StdoutComparator *comparator, const char *src_path) {
     return is_success;
 }
 
-void restore_stdout(StdoutComparator *comparator) {
+void restore_origin_stdout(StdoutComparator *comparator) {
+    if (comparator->temp_file) {
+        fclose(comparator->temp_file);
+    }
+
+    stdout = comparator->original_stdout;
 #ifdef _WIN32
-    freopen("CON", "w", comparator->original_stdout);
+    freopen("CON", "w", stdout);
 #else
-    freopen("/dev/tty", "w", comparator->original_stdout);
+    freopen("/dev/tty", "w", stdout);
 #endif
 }
 
-void cleanup(StdoutComparator *comparator) {
-    if (comparator->temp_file) fclose(comparator->temp_file);
+void destroy_comparator(StdoutComparator *comparator) {
     if (comparator->buffer) free(comparator->buffer);
     free(comparator);
 }

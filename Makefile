@@ -1,5 +1,5 @@
 # Variables
-V=0.0.3
+V=0.0.4
 VERSION=$(V)
 STAGE=dev # dev | debug | tests | release
 BUILD_POSTFIX=$(strip $(STAGE)_$(VERSION))
@@ -28,18 +28,20 @@ config: v
 	@echo
 	@echo "\033[0;32mCommands\033[0m \033[3m(main commands)\033[0m"
 	@echo
-	@printf "  \033[0;33m%-15s\033[0m - %s\n" "make build" "Run build target stage"
+	@printf "  \033[0;33m%-15s\033[0m - %s\n" "make config" "(this) Show current Makefile configuration"
+	@printf "  \033[0;33m%-15s\033[0m - %s\n" "make build" "Build target stage"
+	@printf "  \033[0;33m%-15s\033[0m - %s\n" "make tests" "Build and execute all tests"
 	@printf "  \033[0;33m%-15s\033[0m - %s\n" "make check" "Run clang and cpp checks"
 	@printf "  \033[0;33m%-15s\033[0m - %s\n" "make format" "Run clang formatting"
-	@printf "  \033[0;33m%-15s\033[0m - %s\n" "make config" "(this) Show current Makefile configuration"
+	@printf "  \033[0;33m%-15s\033[0m - %s\n" "make clean" "Cleanup build directories"
 	@printf "  \033[0;33m%-15s\033[0m - %s\n" "make v" "Show current Makefile version"
 	@echo
 	@echo
 	@echo "\033[0;32mVariables\033[0m \033[3m(variables for using with commands)\033[0m"
 	@echo
 	@printf "  %-15s - %s\n" "STAGE" "[ dev | debug | tests | release ]"
-	@printf "  %-15s - %s\n" "VERSION" "Any text"
-	@printf "  %-15s - %s\n" "BUILD_POSTFIX" "Replace \"%STAGE_%VERSION\" pattern"
+	@printf "  %-15s - %s\n" "VERSION" "Any text without spaces"
+	@printf "  %-15s - %s\n" "BUILD_POSTFIX" "Replace \"%STAGE%_%VERSION%\" pattern"
 	@echo
 	@echo "  \033[3mUsage example\033[0m:"
 	@echo "  > make build STAGE=release VERSION=1.2"
@@ -69,14 +71,19 @@ build: v
 	@echo "stage=\033[0;33m$(STAGE)\033[0m"
 	@echo "version=\033[0;33m$(VERSION)\033[0m"
 
-tests: v prepare check test_input_lib test_array_lib
+tests: v prepare check test_print_lib test_input_lib test_array_lib
+	@echo "\n\033[0;32mAll tests complete.\033[0m\n"; \
+
+test_print_lib:
+	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/tests_lib/*.c ./src/print_lib/*c ./tests/test_print_lib.c -o $(BUILD_TESTS_DIR)test_print_lib.out
+	$(BUILD_TESTS_DIR)test_print_lib.out
 
 test_input_lib:
-	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/input_lib/*.c ./src/tests_lib/*.c ./tests/test_input_lib.c -o $(BUILD_TESTS_DIR)test_input_lib.out
+	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/input_lib/*.c ./src/tests_lib/*.c ./src/print_lib/*c ./tests/test_input_lib.c -o $(BUILD_TESTS_DIR)test_input_lib.out
 	$(BUILD_TESTS_DIR)test_input_lib.out
 
 test_array_lib:
-	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/array_lib/*.c ./src/tests_lib/*.c ./tests/test_array_lib.c -o $(BUILD_TESTS_DIR)test_array_lib.out
+	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGSS) ./src/array_lib/*.c ./src/tests_lib/*.c ./src/print_lib/*c ./tests/test_array_lib.c -o $(BUILD_TESTS_DIR)test_array_lib.out
 	$(BUILD_TESTS_DIR)test_array_lib.out
 
 # Run clang and cpp checks
@@ -89,7 +96,7 @@ check:
 		exit 1; \
 	fi
 	@printf "+--------------------+\n│ %-20s │\n+--------------------+\n" "📋 cpp check"
-	cppcheck $(CPPCHECK_FLAGS) $(SRC_DIR)
+	cppcheck $(CPPCHECK_FLAGS) --suppress=ignoredReturnValue --check-level=exhaustive $(SRC_DIR)
 	cppcheck $(CPPCHECK_FLAGS) --suppress=ignoredReturnValue $(TESTS_DIR)
 	@echo "\033[0;32mAll checks complete.\033[0m";
 

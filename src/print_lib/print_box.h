@@ -108,7 +108,7 @@ PrintBox* init_print_box(unsigned long width, const char* locale, BorderType bor
  * @param[in] h_corner The character used for horizontal padding.
  * @param[in] text The text to be centered and printed.
  */
-void print_line_with_text(PrintBox* box, wchar_t start_corner, wchar_t end_corner, wchar_t h_corner,
+void print_line_with_text(const PrintBox* box, wchar_t start_corner, wchar_t end_corner, wchar_t h_corner,
                           const wchar_t* text);
 
 /**
@@ -122,7 +122,7 @@ void print_line_with_text(PrintBox* box, wchar_t start_corner, wchar_t end_corne
  * @param[in] end_corner The character for the ending corner of the line.
  * @param[in] h_corner The character used for the horizontal line.
  */
-void print_line_no_text(PrintBox* box, wchar_t start_corner, wchar_t end_corner, wchar_t h_corner);
+void print_line_no_text(const PrintBox* box, wchar_t start_corner, wchar_t end_corner, wchar_t h_corner);
 
 /**
  * @brief Prints the header line of the PrintBox.
@@ -132,7 +132,7 @@ void print_line_no_text(PrintBox* box, wchar_t start_corner, wchar_t end_corner,
  *
  * @param[in] box A pointer to the PrintBox structure.
  */
-void print_header_line(PrintBox* box);
+void print_header_line(const PrintBox* box);
 
 /**
  * @brief Prints a divider line within the PrintBox.
@@ -142,7 +142,7 @@ void print_header_line(PrintBox* box);
  *
  * @param[in] box A pointer to the PrintBox structure.
  */
-void print_divider_line(PrintBox* box);
+void print_divider_line(const PrintBox* box);
 
 /**
  * @brief Prints the footer line of the PrintBox.
@@ -152,7 +152,7 @@ void print_divider_line(PrintBox* box);
  *
  * @param[in] box A pointer to the PrintBox structure.
  */
-void print_footer_line(PrintBox* box);
+void print_footer_line(const PrintBox* box);
 
 /**
  * @brief Prints a header line with centered text.
@@ -163,7 +163,7 @@ void print_footer_line(PrintBox* box);
  * @param[in] box A pointer to the PrintBox structure.
  * @param[in] header_text The text to be centered and printed in the header line.
  */
-void print_header_line_with_text(PrintBox* box, const wchar_t* header_text);
+void print_header_line_with_text(const PrintBox* box, const wchar_t* header_text);
 
 /**
  * @brief Prints a divider line with centered text.
@@ -174,7 +174,7 @@ void print_header_line_with_text(PrintBox* box, const wchar_t* header_text);
  * @param[in] box A pointer to the PrintBox structure.
  * @param[in] header_text The text to be centered and printed in the divider line.
  */
-void print_divider_line_with_text(PrintBox* box, const wchar_t* header_text);
+void print_divider_line_with_text(const PrintBox* box, const wchar_t* header_text);
 
 /**
  * @brief Prints a footer line with centered text.
@@ -185,7 +185,7 @@ void print_divider_line_with_text(PrintBox* box, const wchar_t* header_text);
  * @param[in] box A pointer to the PrintBox structure.
  * @param[in] header_text The text to be centered and printed in the footer line.
  */
-void print_footer_line_with_text(PrintBox* box, const wchar_t* header_text);
+void print_footer_line_with_text(const PrintBox* box, const wchar_t* header_text);
 
 /**
  * @brief Prints a line of text within the PrintBox, handling word wrapping.
@@ -223,7 +223,7 @@ void print_text(PrintBox* box, const wchar_t* text);
  * @param[in] ... Additional arguments providing data to be formatted according to
  *                the format specifiers in the format string.
  */
-void printf_text(PrintBox* box, const wchar_t* format, ...);
+void print_formatted_text(PrintBox* box, const wchar_t* format, ...);
 
 /**
  * @brief Prints a multiline header with text within the PrintBox.

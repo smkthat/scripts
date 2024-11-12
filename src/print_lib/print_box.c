@@ -72,58 +72,58 @@ PrintBox* init_print_box(const unsigned long width, const char* locale, BorderTy
     return box;
 }
 
-void print_line_with_text(PrintBox* box, wchar_t start_corner, wchar_t end_corner, wchar_t h_corner,
+void print_line_with_text(const PrintBox* box, wchar_t start_corner, wchar_t end_corner, wchar_t h_corner,
                           const wchar_t* text) {
     int total_padding = (int)(box->width - wcslen(text) + 2);
     int left_padding = total_padding / 2;
     int right_padding = total_padding - left_padding;
 
-    wprintf(L"%lc", start_corner);
+    wprintf(L"%lc", (unsigned long)start_corner);
     for (int i = 0; i < left_padding - 1; i++) {
-        wprintf(L"%lc", h_corner);
+        wprintf(L"%lc", (unsigned long)h_corner);
     }
     wprintf(L" %ls ", text);
     for (int i = 0; i < right_padding - 1; i++) {
-        wprintf(L"%lc", h_corner);
+        wprintf(L"%lc", (unsigned long)h_corner);
     }
-    wprintf(L"%lc\n", end_corner);
+    wprintf(L"%lc\n", (unsigned long)end_corner);
 }
 
-void print_line_no_text(PrintBox* box, const wchar_t start_corner, const wchar_t end_corner,
+void print_line_no_text(const PrintBox* box, const wchar_t start_corner, const wchar_t end_corner,
                         const wchar_t h_corner) {
-    wprintf(L"%lc", start_corner);
+    wprintf(L"%lc", (unsigned long)start_corner);
     for (int i = 0; i < (int)box->width + 2; i++) {
-        wprintf(L"%lc", h_corner);
+        wprintf(L"%lc", (unsigned long)h_corner);
     }
-    wprintf(L"%lc\n", end_corner);
+    wprintf(L"%lc\n", (unsigned long)end_corner);
 }
 
-void print_header_line(PrintBox* box) {
+void print_header_line(const PrintBox* box) {
     print_line_no_text(box, box->tl_corner, box->tr_corner, box->h_corner);
 }
 
-void print_divider_line(PrintBox* box) {
+void print_divider_line(const PrintBox* box) {
     print_line_no_text(box, box->ml_corner, box->mr_corner, box->h_corner);
 }
 
-void print_footer_line(PrintBox* box) {
+void print_footer_line(const PrintBox* box) {
     print_line_no_text(box, box->bl_corner, box->br_corner, box->h_corner);
 }
 
-void print_header_line_with_text(PrintBox* box, const wchar_t* header_text) {
+void print_header_line_with_text(const PrintBox* box, const wchar_t* header_text) {
     print_line_with_text(box, box->tl_corner, box->tr_corner, box->h_corner, header_text);
 }
 
-void print_divider_line_with_text(PrintBox* box, const wchar_t* header_text) {
+void print_divider_line_with_text(const PrintBox* box, const wchar_t* header_text) {
     print_line_with_text(box, box->ml_corner, box->mr_corner, box->h_corner, header_text);
 }
 
-void print_footer_line_with_text(PrintBox* box, const wchar_t* header_text) {
+void print_footer_line_with_text(const PrintBox* box, const wchar_t* header_text) {
     print_line_with_text(box, box->bl_corner, box->br_corner, box->h_corner, header_text);
 }
 
 void print_text_line(PrintBox* box, const wchar_t* text, unsigned long start_index) {
-    wprintf(L"%lc ", box->v_corner);
+    wprintf(L"%lc ", (unsigned long)box->v_corner);
     unsigned long text_len = wcslen(text);
     unsigned long current_index = start_index;
     unsigned long printed_chars = 0;
@@ -138,7 +138,7 @@ void print_text_line(PrintBox* box, const wchar_t* text, unsigned long start_ind
             last_space_index = current_index;
             is_found_space = 1;
         }
-        wprintf(L"%lc", text[current_index]);
+        wprintf(L"%lc", (unsigned long)text[current_index]);
         current_index++;
         printed_chars++;
     }
@@ -146,16 +146,16 @@ void print_text_line(PrintBox* box, const wchar_t* text, unsigned long start_ind
     if (box->word_wrap && current_index < text_len && !isspace(text[current_index]) && is_found_space) {
         current_index = last_space_index + 1;
         printed_chars = last_space_index - start_index;
-        wprintf(L"\r%lc ", box->v_corner);
+        wprintf(L"\r%lc ", (unsigned long)box->v_corner);
         for (unsigned long j = start_index; j < current_index - 1; j++) {
-            wprintf(L"%lc", text[j]);
+            wprintf(L"%lc", (unsigned long)text[j]);
         }
     }
 
     for (unsigned long j = printed_chars; j < box->width; j++) {
         wprintf(L" ");
     }
-    wprintf(L" %lc\n", box->v_corner);
+    wprintf(L" %lc\n", (unsigned long)box->v_corner);
 
     if (current_index < text_len && text[current_index] == '\n') {
         current_index++;
@@ -168,7 +168,7 @@ void print_text_line(PrintBox* box, const wchar_t* text, unsigned long start_ind
 
 void print_text(PrintBox* box, const wchar_t* text) { print_text_line(box, text, 0); }
 
-void printf_text(PrintBox* box, const wchar_t* format, ...) {
+void print_formatted_text(PrintBox* box, const wchar_t* format, ...) {
     wchar_t buffer[PRINTBOX_DEFAULT_BUFFER];
     va_list args;
     va_start(args, format);
@@ -199,6 +199,5 @@ void destroy_print_box(PrintBox* box) {
     if (box) {
         setlocale(LC_CTYPE, NULL);
         free(box);
-        box = NULL;
     }
 }
